@@ -1,0 +1,8 @@
+[package]
+name = "merged_branches_cli"
+version = "0.1.0"
+authors = ["Gal Schlezinger <gal@spitfire.co.il>"]
+edition = "2018"
+
+[dependencies]
+colored = "1.7"
