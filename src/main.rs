@@ -8,16 +8,14 @@ struct Branch {
     commit_hash: String,
 }
 
-impl Branch {
-    pub fn parse_line_local(line: String) -> Option<Branch> {
-        let parts: Vec<&str> = line.split(" ").collect();
-        match parts.as_slice() {
-            [name, commit_hash] => Some(Branch {
-                name: name.to_string(),
-                commit_hash: commit_hash.to_string(),
-            }),
-            _ => None,
-        }
+fn parse_branch(line: String) -> Option<Branch> {
+    let parts: Vec<&str> = line.split(" ").collect();
+    match parts.as_slice() {
+        [name, commit_hash] => Some(Branch {
+            name: name.to_string(),
+            commit_hash: commit_hash.to_string(),
+        }),
+        _ => None,
     }
 }
 
@@ -79,7 +77,7 @@ fn get_local_branches() -> std::io::Result<impl Iterator<Item = Branch>> {
         .stdout(std::process::Stdio::piped())
         .spawn()?;
     let git_branches = BufReader::new(git_branch.stdout.unwrap()).lines();
-    let branches = git_branches.filter_map(|line| Branch::parse_line_local(line.unwrap()));
+    let branches = git_branches.filter_map(|line| parse_branch(line.ok()?));
     Ok(branches)
 }
 
